@@ -1,0 +1,41 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh
+  endpoint:
+    health:
+      show-details: always
+
+spring:
+  cloud:
+    config:
+      retry:
+        initial-interval: 1000
+        max-attempts: 6
+        max-interval: 2000
+        multiplier: 1.1
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    com.netflix.eureka: INFO
+    com.netflix.discovery: INFO
